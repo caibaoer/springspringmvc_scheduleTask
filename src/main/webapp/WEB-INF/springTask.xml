@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="GBK"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
+        "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+        <!-- 定义目标bean和bean中的方法 -->
+        <bean id="myJob" class="com.gx.job.TestJob" />
+        <bean id="mySpringJob"  class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+            <property name="concurrent"> <!--定时任务不会并行执行,默认是true-->
+                     <value>false</value>
+            </property>
+            <property name="targetObject"><!--要执行的对象-->
+                <ref bean="myJob" />
+            </property>
+            <property name="targetMethod">  <!-- 要执行的方法名称 -->
+                <value>doJob</value>
+            </property>
+    </bean>
+    <!-- ================= 调度触发器 ======================== -->
+    <bean id="CronTriggerBean_SendMailJob" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="mySpringJob"></property>
+        <property name="cronExpression" value="0 0/1 * * * ?"></property><!--1分钟触发一次-->
+    </bean>
+    <!-- ======================== 调度工厂 ======================== -->
+    <bean id="SpringJobSchedulerFactoryBean" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <list>
+                <ref bean="CronTriggerBean_SendMailJob"/>
+            </list>
+        </property>
+    </bean>
+</beans>
