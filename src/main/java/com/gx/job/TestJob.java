@@ -7,6 +7,10 @@ package com.gx.job;
  * @Created by huangwencai
  */
 public class TestJob {
+    public TestJob() {
+        System.out.println("Test job...");
+    }
+
     public void doJob(){
         // 业务处理逻辑
         System.out.println("======task execute=======");
